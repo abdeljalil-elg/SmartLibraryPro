@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.smartlibrary.controller.HelpController"
+      spacing="18"
+      styleClass="page">
+    <padding>
+        <Insets top="28" right="30" bottom="30" left="30"/>
+    </padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="12">
+        <VBox spacing="5" HBox.hgrow="ALWAYS">
+            <Label text="Centre d'aide" styleClass="page-title"/>
+            <Label text="Guide utilisateur, FAQ et raccourcis clavier." styleClass="page-subtitle"/>
+        </VBox>
+        <Button text="Support" onAction="#showSupportDialog" styleClass="primary-button"/>
+    </HBox>
+
+    <Accordion VBox.vgrow="ALWAYS">
+        <panes>
+            <TitledPane text="Guide utilisateur" expanded="true">
+                <TextArea editable="false" wrapText="true" styleClass="help-text"
+                          text="1. Importez le fichier database/init_db.sql dans MySQL.&#10;2. Vérifiez src/main/resources/database.properties.&#10;3. Lancez l'application avec Maven ou IntelliJ IDEA.&#10;4. Ajoutez vos livres, créez les emprunts et utilisez les exports CSV pour partager les données."/>
+            </TitledPane>
+            <TitledPane text="FAQ">
+                <TextArea editable="false" wrapText="true" styleClass="help-text"
+                          text="Pourquoi un livre devient indisponible ?&#10;Quand sa quantité atteint zéro après un emprunt.&#10;&#10;Le retour restaure-t-il le stock ?&#10;Oui, le service métier réaugmente la quantité et remet le livre disponible.&#10;&#10;Les préférences sont-elles conservées ?&#10;Oui, elles sont sauvegardées avec java.util.prefs."/>
+            </TitledPane>
+            <TitledPane text="Raccourcis clavier">
+                <ListView fx:id="shortcutsListView" prefHeight="220"/>
+            </TitledPane>
+        </panes>
+    </Accordion>
+</VBox>

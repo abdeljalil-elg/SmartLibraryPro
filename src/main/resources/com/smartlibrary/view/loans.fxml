@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.smartlibrary.controller.LoansController"
+            styleClass="page">
+    <padding>
+        <Insets top="28" right="30" bottom="30" left="30"/>
+    </padding>
+
+    <top>
+        <VBox spacing="16">
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="Gestion des emprunts" styleClass="page-title"/>
+                    <Label text="Création d'emprunts, retours, retards et synchronisation automatique du stock." styleClass="page-subtitle"/>
+                </VBox>
+                <ProgressIndicator fx:id="busyIndicator" visible="false" prefWidth="28" prefHeight="28"/>
+                <Button text="Nouvel emprunt" onAction="#onNewLoan" styleClass="secondary-button"/>
+                <Button text="Exporter CSV" onAction="#onExportLoans" styleClass="secondary-button">
+                    <tooltip><Tooltip text="Exporter la liste filtrée des emprunts"/></tooltip>
+                </Button>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="filter-bar">
+                <TextField fx:id="searchField" promptText="Rechercher emprunteur, livre, email..." HBox.hgrow="ALWAYS"/>
+                <ComboBox fx:id="statusFilter" prefWidth="170"/>
+                <Button text="Actualiser" onAction="#refreshLoans" styleClass="secondary-button"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <HBox spacing="18">
+            <TableView fx:id="loansTable" HBox.hgrow="ALWAYS" styleClass="data-table">
+                <columns>
+                    <TableColumn fx:id="idColumn" text="ID" prefWidth="56"/>
+                    <TableColumn fx:id="bookColumn" text="Livre" prefWidth="270"/>
+                    <TableColumn fx:id="borrowerColumn" text="Emprunteur" prefWidth="190"/>
+                    <TableColumn fx:id="dueDateColumn" text="Retour prévu" prefWidth="130"/>
+                    <TableColumn fx:id="statusColumn" text="Statut" prefWidth="120"/>
+                </columns>
+            </TableView>
+
+            <VBox spacing="12" styleClass="form-panel" prefWidth="380">
+                <Label text="Dossier d'emprunt" styleClass="section-title"/>
+                <ComboBox fx:id="bookComboBox" promptText="Livre à emprunter" maxWidth="Infinity"/>
+                <TextField fx:id="borrowerNameField" promptText="Nom complet de l'emprunteur"/>
+                <TextField fx:id="borrowerEmailField" promptText="Email"/>
+                <TextField fx:id="borrowerPhoneField" promptText="Téléphone"/>
+                <HBox spacing="10">
+                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <Label text="Date emprunt" styleClass="field-label"/>
+                        <DatePicker fx:id="loanDatePicker" maxWidth="Infinity"/>
+                    </VBox>
+                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <Label text="Retour prévu" styleClass="field-label"/>
+                        <DatePicker fx:id="dueDatePicker" maxWidth="Infinity"/>
+                    </VBox>
+                </HBox>
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="Durée" styleClass="field-label"/>
+                    <Spinner fx:id="durationSpinner" editable="true" prefWidth="110"/>
+                    <Label text="jours" styleClass="muted-label"/>
+                </HBox>
+                <TextArea fx:id="notesArea" promptText="Notes internes, état du livre, conditions de retour..." prefRowCount="6" wrapText="true"/>
+                <HBox spacing="10">
+                    <Button text="Créer" onAction="#onCreateLoan" maxWidth="Infinity" HBox.hgrow="ALWAYS" styleClass="primary-button"/>
+                    <Button text="Modifier" onAction="#onUpdateLoan" maxWidth="Infinity" HBox.hgrow="ALWAYS" styleClass="secondary-button"/>
+                </HBox>
+                <HBox spacing="10">
+                    <Button text="Retour" onAction="#onReturnLoan" maxWidth="Infinity" HBox.hgrow="ALWAYS" styleClass="success-button"/>
+                    <Button text="Supprimer" onAction="#onDeleteLoan" maxWidth="Infinity" HBox.hgrow="ALWAYS" styleClass="danger-button"/>
+                </HBox>
+            </VBox>
+        </HBox>
+    </center>
+</BorderPane>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.smartlibrary.controller.DashboardController"
+      spacing="18"
+      styleClass="page">
+    <padding>
+        <Insets top="28" right="30" bottom="30" left="30"/>
+    </padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="14">
+        <VBox spacing="5" HBox.hgrow="ALWAYS">
+            <Label text="Tableau de bord" styleClass="page-title"/>
+            <Label text="Vue instantanée du catalogue, du stock et des emprunts actifs." styleClass="page-subtitle"/>
+        </VBox>
+        <ProgressIndicator fx:id="loadingIndicator" visible="false" prefWidth="28" prefHeight="28"/>
+        <Button text="Actualiser" onAction="#refreshDashboard" styleClass="primary-button">
+            <tooltip><Tooltip text="Recharger les statistiques depuis MySQL"/></tooltip>
+        </Button>
+    </HBox>
+
+    <GridPane hgap="14" vgap="14">
+        <VBox styleClass="kpi-card" GridPane.columnIndex="0">
+            <Label text="Total livres" styleClass="kpi-label"/>
+            <Label fx:id="totalBooksLabel" text="0" styleClass="kpi-value"/>
+            <Label text="Titres catalogués" styleClass="kpi-caption"/>
+        </VBox>
+        <VBox styleClass="kpi-card success-card" GridPane.columnIndex="1">
+            <Label text="Disponibles" styleClass="kpi-label"/>
+            <Label fx:id="availableBooksLabel" text="0" styleClass="kpi-value"/>
+            <Label text="Prêts à emprunter" styleClass="kpi-caption"/>
+        </VBox>
+        <VBox styleClass="kpi-card warning-card" GridPane.columnIndex="2">
+            <Label text="Indisponibles" styleClass="kpi-label"/>
+            <Label fx:id="unavailableBooksLabel" text="0" styleClass="kpi-value"/>
+            <Label text="Stock épuisé" styleClass="kpi-caption"/>
+        </VBox>
+        <VBox styleClass="kpi-card info-card" GridPane.columnIndex="3">
+            <Label text="Emprunts actifs" styleClass="kpi-label"/>
+            <Label fx:id="activeLoansLabel" text="0" styleClass="kpi-value"/>
+            <Label text="Sorties en cours" styleClass="kpi-caption"/>
+        </VBox>
+        <VBox styleClass="kpi-card danger-card" GridPane.columnIndex="4">
+            <Label text="Retards" styleClass="kpi-label"/>
+            <Label fx:id="lateLoansLabel" text="0" styleClass="kpi-value"/>
+            <Label text="À relancer" styleClass="kpi-caption"/>
+        </VBox>
+    </GridPane>
+
+    <GridPane hgap="18" vgap="18" VBox.vgrow="ALWAYS">
+        <VBox styleClass="panel" spacing="12" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <Label text="Répartition des emprunts" styleClass="section-title"/>
+            <PieChart fx:id="loanStatusPieChart" legendVisible="true" labelsVisible="true" prefHeight="260"/>
+        </VBox>
+
+        <VBox styleClass="panel" spacing="12" GridPane.columnIndex="1" GridPane.rowIndex="0">
+            <Label text="Catégories du catalogue" styleClass="section-title"/>
+            <BarChart fx:id="categoryBarChart" legendVisible="false" animated="true" prefHeight="260">
+                <xAxis><CategoryAxis/></xAxis>
+                <yAxis><NumberAxis/></yAxis>
+            </BarChart>
+        </VBox>
+
+        <VBox styleClass="panel" spacing="12" GridPane.columnIndex="0" GridPane.rowIndex="1">
+            <Label text="Évolution mensuelle" styleClass="section-title"/>
+            <LineChart fx:id="monthlyLoansLineChart" legendVisible="false" animated="true" prefHeight="260">
+                <xAxis><CategoryAxis/></xAxis>
+                <yAxis><NumberAxis/></yAxis>
+            </LineChart>
+        </VBox>
+
+        <VBox styleClass="panel" spacing="12" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Label text="Livres populaires" styleClass="section-title"/>
+            <ListView fx:id="popularBooksList" VBox.vgrow="ALWAYS" prefHeight="210"/>
+            <VBox spacing="8">
+                <Label fx:id="stockLabel" text="Stock en attente" styleClass="muted-label"/>
+                <ProgressBar fx:id="stockProgressBar" maxWidth="Infinity"/>
+            </VBox>
+        </VBox>
+    </GridPane>
+</VBox>

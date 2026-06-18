@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.smartlibrary.controller.StatisticsController"
+      spacing="18"
+      styleClass="page">
+    <padding>
+        <Insets top="28" right="30" bottom="30" left="30"/>
+    </padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="12">
+        <VBox spacing="5" HBox.hgrow="ALWAYS">
+            <Label text="Centre de statistiques" styleClass="page-title"/>
+            <Label text="Analyse visuelle du catalogue, de la circulation et des retards." styleClass="page-subtitle"/>
+        </VBox>
+        <Button text="Actualiser" onAction="#refreshStatistics" styleClass="primary-button"/>
+    </HBox>
+
+    <GridPane hgap="18" vgap="18" VBox.vgrow="ALWAYS">
+        <VBox styleClass="panel" spacing="12" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <Label text="Catégories" styleClass="section-title"/>
+            <PieChart fx:id="categoriesPieChart" prefHeight="270"/>
+        </VBox>
+        <VBox styleClass="panel" spacing="12" GridPane.columnIndex="1" GridPane.rowIndex="0">
+            <Label text="Statuts des emprunts" styleClass="section-title"/>
+            <BarChart fx:id="statusBarChart" legendVisible="false" prefHeight="270">
+                <xAxis><CategoryAxis/></xAxis>
+                <yAxis><NumberAxis/></yAxis>
+            </BarChart>
+        </VBox>
+        <VBox styleClass="panel" spacing="12" GridPane.columnIndex="0" GridPane.rowIndex="1">
+            <Label text="Tendance mensuelle" styleClass="section-title"/>
+            <LineChart fx:id="evolutionLineChart" legendVisible="false" prefHeight="260">
+                <xAxis><CategoryAxis/></xAxis>
+                <yAxis><NumberAxis/></yAxis>
+            </LineChart>
+        </VBox>
+        <VBox styleClass="panel" spacing="14" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Label text="Insights opérationnels" styleClass="section-title"/>
+            <ListView fx:id="insightsListView" prefHeight="190"/>
+            <Label fx:id="availabilityLabel" text="Disponibilité en attente" styleClass="muted-label"/>
+            <ProgressBar fx:id="availabilityProgressBar" maxWidth="Infinity"/>
+        </VBox>
+    </GridPane>
+</VBox>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane xmlns="http://javafx.com/javafx/21"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.smartlibrary.controller.SplashController"
+           styleClass="splash-root">
+    <VBox alignment="CENTER" spacing="22" styleClass="splash-card">
+        <padding>
+            <Insets top="48" right="64" bottom="48" left="64"/>
+        </padding>
+        <StackPane styleClass="splash-logo">
+            <Label text="SL" styleClass="splash-logo-text"/>
+        </StackPane>
+        <VBox alignment="CENTER" spacing="8">
+            <Label text="SmartLibrary Pro" styleClass="splash-title"/>
+            <Label text="Bibliothèque intelligente moderne" styleClass="splash-subtitle"/>
+        </VBox>
+        <ProgressIndicator fx:id="progressIndicator" prefWidth="54" prefHeight="54"/>
+        <ProgressBar fx:id="progressBar" prefWidth="360"/>
+        <Label fx:id="loadingLabel" text="Initialisation de l'expérience..." styleClass="muted-label"/>
+    </VBox>
+</StackPane>

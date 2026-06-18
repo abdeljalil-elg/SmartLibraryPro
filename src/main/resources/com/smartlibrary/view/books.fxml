@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.smartlibrary.controller.BooksController"
+            styleClass="page">
+    <fx:define>
+        <ToggleGroup fx:id="availabilityGroup"/>
+    </fx:define>
+    <padding>
+        <Insets top="28" right="30" bottom="30" left="30"/>
+    </padding>
+
+    <top>
+        <VBox spacing="16">
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="Gestion des livres" styleClass="page-title"/>
+                    <Label text="Catalogue, stock, disponibilité, recherche instantanée et export CSV." styleClass="page-subtitle"/>
+                </VBox>
+                <Button text="Nouveau" onAction="#onNewBook" styleClass="secondary-button">
+                    <tooltip><Tooltip text="Vider le formulaire pour saisir un nouveau livre"/></tooltip>
+                </Button>
+                <Button text="Exporter CSV" onAction="#onExportBooks" styleClass="secondary-button">
+                    <tooltip><Tooltip text="Exporter la liste filtrée des livres"/></tooltip>
+                </Button>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="filter-bar">
+                <TextField fx:id="searchField" promptText="Rechercher titre, auteur, ISBN..." HBox.hgrow="ALWAYS"/>
+                <ComboBox fx:id="categoryFilter" prefWidth="180"/>
+                <CheckBox fx:id="availableOnlyCheckBox" text="Stock disponible"/>
+                <RadioButton fx:id="allRadio" text="Tous" toggleGroup="$availabilityGroup"/>
+                <RadioButton fx:id="availableRadio" text="Disponibles" toggleGroup="$availabilityGroup"/>
+                <RadioButton fx:id="unavailableRadio" text="Indisponibles" toggleGroup="$availabilityGroup"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <HBox spacing="18">
+            <TableView fx:id="booksTable" HBox.hgrow="ALWAYS" styleClass="data-table">
+                <columns>
+                    <TableColumn fx:id="idColumn" text="ID" prefWidth="58"/>
+                    <TableColumn fx:id="titleColumn" text="Titre" prefWidth="260"/>
+                    <TableColumn fx:id="authorColumn" text="Auteur" prefWidth="180"/>
+                    <TableColumn fx:id="categoryColumn" text="Catégorie" prefWidth="145"/>
+                    <TableColumn fx:id="quantityColumn" text="Qté" prefWidth="70"/>
+                    <TableColumn fx:id="statusColumn" text="Statut" prefWidth="120"/>
+                </columns>
+            </TableView>
+
+            <VBox spacing="12" styleClass="form-panel" prefWidth="360">
+                <Label fx:id="formTitleLabel" text="Nouveau livre" styleClass="section-title"/>
+                <TextField fx:id="titleField" promptText="Titre du livre"/>
+                <TextField fx:id="authorField" promptText="Auteur"/>
+                <TextField fx:id="isbnField" promptText="ISBN"/>
+                <ComboBox fx:id="categoryInput" promptText="Catégorie" maxWidth="Infinity"/>
+                <TextField fx:id="publisherField" promptText="Maison d'édition"/>
+                <TextField fx:id="yearField" promptText="Année de publication"/>
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="Quantité" styleClass="field-label"/>
+                    <Spinner fx:id="quantitySpinner" editable="true" prefWidth="110"/>
+                </HBox>
+                <ProgressBar fx:id="stockProgressBar" maxWidth="Infinity"/>
+                <TextArea fx:id="descriptionArea" promptText="Description, résumé ou notes internes..." prefRowCount="6" wrapText="true"/>
+                <HBox spacing="10">
+                    <Button text="Enregistrer" onAction="#onSaveBook" maxWidth="Infinity" HBox.hgrow="ALWAYS" styleClass="primary-button"/>
+                    <Button text="Supprimer" onAction="#onDeleteBook" maxWidth="Infinity" HBox.hgrow="ALWAYS" styleClass="danger-button"/>
+                </HBox>
+            </VBox>
+        </HBox>
+    </center>
+</BorderPane>
