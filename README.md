@@ -83,6 +83,21 @@ src/main/resources/com/smartlibrary
 database/init_db.sql
 ```
 
-## Notes de soutenance
+## Notes 
 
 L'application reste ouvrable même si MySQL n'est pas encore lancé: elle affiche une notification d'erreur au lieu de crasher. Dès que `init_db.sql` est importé et que `database.properties` est correct, toutes les fonctionnalités DAO/JDBC deviennent actives.
+## Vidéo de démonstration
+
+Lien Google Drive :
+
+https://drive.google.com/drive/folders/1vHHf30suFkk9h5lh4H50Wq4gJ5Gt3ggP
+
+La vidéo présente :
+
+L’interface de l’application
+La navigation
+Le CRUD des livres
+Le CRUD des emprunts
+Les statistiques
+L’export CSV
+Les principaux contrôles JavaFX utilisés
