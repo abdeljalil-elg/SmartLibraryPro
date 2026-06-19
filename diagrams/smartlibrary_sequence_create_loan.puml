@@ -1,0 +1,83 @@
+@startuml SmartLibraryPro_CreateLoan_Sequence
+title SmartLibrary Pro - Diagramme de séquence : création d'un emprunt
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+skinparam ParticipantPadding 22
+skinparam BoxPadding 12
+autonumber
+
+actor "Bibliothécaire" as Librarian
+boundary "LoansController" as UI
+control "AppContext" as Context
+control "LibraryService" as Service
+database "Database" as Database
+participant "Connection" as Connection
+participant "JdbcBookDao" as BookDao
+participant "JdbcLoanDao" as LoanDao
+database "MySQL\nlivres / emprunts" as MySQL
+control "NotificationCenter" as Notifications
+boundary "MainController" as MainController
+control "DialogUtils" as Dialogs
+
+Librarian -> UI : Cliquer sur "Créer un emprunt"
+activate UI
+UI -> UI : buildLoanFromForm()
+
+alt Formulaire incomplet
+    UI -> Dialogs : warning("Formulaire incomplet", message)
+else Formulaire valide
+    UI -> Context : get().library()
+    Context --> UI : LibraryService
+    UI -> Service : createLoan(loan)
+    activate Service
+
+    Service -> Database : getConnection()
+    Database --> Service : Connection
+    Service -> Connection : setAutoCommit(false)
+
+    Service -> BookDao : decrementQuantity(connection, loan.bookId)
+    activate BookDao
+    BookDao -> MySQL : SELECT quantite FROM livres\nWHERE id = ? FOR UPDATE
+
+    alt Stock indisponible
+        MySQL --> BookDao : quantite <= 0
+        BookDao --> Service : SQLException
+        deactivate BookDao
+        Service -> Connection : rollback()
+        Service -> Connection : setAutoCommit(true)
+        Service --> UI : SQLException
+        deactivate Service
+        UI -> Dialogs : error("Emprunt impossible", message)
+        UI -> Context : notify(ERROR, "Stock ou MySQL", message)
+        Context -> Notifications : add(ERROR, title, message)
+        Context -> MainController : showToast(ERROR, title, message)
+    else Stock disponible
+        MySQL --> BookDao : quantite > 0
+        BookDao -> MySQL : UPDATE livres SET quantite = ?,\ndisponible = ?, nombre_emprunts = nombre_emprunts + 1
+        BookDao --> Service : OK
+        deactivate BookDao
+
+        Service -> Service : loan.setStatus(ACTIVE)
+        Service -> LoanDao : save(connection, loan)
+        activate LoanDao
+        LoanDao -> MySQL : INSERT INTO emprunts(...)
+        MySQL --> LoanDao : id généré
+        LoanDao --> Service : savedLoan
+        deactivate LoanDao
+
+        Service -> Connection : commit()
+        Service -> Connection : setAutoCommit(true)
+        Service --> UI : savedLoan
+        deactivate Service
+
+        UI -> Context : notify(SUCCESS, "Emprunt créé", message)
+        Context -> Notifications : add(SUCCESS, title, message)
+        Context -> MainController : showToast(SUCCESS, title, message)
+        UI -> UI : refreshBooks(); refreshLoans(); clearForm()
+    end
+end
+
+deactivate UI
+@enduml

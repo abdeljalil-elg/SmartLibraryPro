@@ -1,0 +1,85 @@
+@startuml SmartLibraryPro_UseCase
+title SmartLibrary Pro - Diagramme de cas d'utilisation
+
+left to right direction
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam linetype ortho
+skinparam packageStyle rectangle
+skinparam actor {
+    BackgroundColor #F7FAFC
+    BorderColor #1F2937
+    FontColor #111827
+}
+skinparam usecase {
+    BackgroundColor #EFF6FF
+    BorderColor #2563EB
+    FontColor #111827
+}
+skinparam rectangle {
+    BorderColor #374151
+    FontColor #111827
+}
+
+actor "Bibliothécaire" as Librarian
+
+rectangle "SmartLibrary Pro" {
+    usecase "Consulter le\ntableau de bord" as UC_Dashboard
+    usecase "Consulter les\nstatistiques" as UC_Stats
+
+    usecase "Gérer le catalogue\ndes livres" as UC_Books
+    usecase "Ajouter un livre" as UC_AddBook
+    usecase "Modifier un livre" as UC_UpdateBook
+    usecase "Supprimer un livre" as UC_DeleteBook
+    usecase "Rechercher et filtrer\nles livres" as UC_SearchBook
+    usecase "Exporter les livres\nCSV" as UC_ExportBook
+
+    usecase "Gérer les emprunts" as UC_Loans
+    usecase "Créer un emprunt" as UC_CreateLoan
+    usecase "Modifier un emprunt" as UC_UpdateLoan
+    usecase "Enregistrer un retour" as UC_ReturnLoan
+    usecase "Supprimer un emprunt" as UC_DeleteLoan
+    usecase "Rechercher et filtrer\nles emprunts" as UC_SearchLoan
+    usecase "Exporter les emprunts\nCSV" as UC_ExportLoan
+
+    usecase "Synchroniser le stock" as UC_Stock
+    usecase "Actualiser les retards" as UC_Late
+
+    usecase "Consulter les\nnotifications" as UC_Notifications
+    usecase "Configurer les\npréférences" as UC_Settings
+    usecase "Tester la connexion\nMySQL" as UC_TestDb
+}
+
+Librarian --> UC_Dashboard
+Librarian --> UC_Stats
+Librarian --> UC_Books
+Librarian --> UC_Loans
+Librarian --> UC_Notifications
+Librarian --> UC_Settings
+
+UC_Books .> UC_AddBook : <<include>>
+UC_Books .> UC_UpdateBook : <<include>>
+UC_Books .> UC_DeleteBook : <<include>>
+UC_Books .> UC_SearchBook : <<include>>
+UC_Books .> UC_ExportBook : <<include>>
+
+UC_Loans .> UC_CreateLoan : <<include>>
+UC_Loans .> UC_UpdateLoan : <<include>>
+UC_Loans .> UC_ReturnLoan : <<include>>
+UC_Loans .> UC_DeleteLoan : <<include>>
+UC_Loans .> UC_SearchLoan : <<include>>
+UC_Loans .> UC_ExportLoan : <<include>>
+
+UC_CreateLoan .> UC_Stock : <<include>>
+UC_UpdateLoan .> UC_Stock : <<include>>
+UC_ReturnLoan .> UC_Stock : <<include>>
+UC_DeleteLoan .> UC_Stock : <<include>>
+
+UC_Dashboard .> UC_Late : <<include>>
+UC_Stats .> UC_Late : <<include>>
+UC_Loans .> UC_Late : <<include>>
+
+UC_Settings .> UC_TestDb : <<include>>
+
+@enduml

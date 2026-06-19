@@ -1,0 +1,292 @@
+@startuml SmartLibraryPro_ClassDiagram
+title SmartLibrary Pro - Diagramme de classes
+
+left to right direction
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam linetype ortho
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 45
+skinparam ranksep 40
+skinparam class {
+    BackgroundColor #F8FAFC
+    BorderColor #334155
+    FontColor #111827
+}
+skinparam interface {
+    BackgroundColor #ECFDF5
+    BorderColor #047857
+}
+skinparam enum {
+    BackgroundColor #FEF3C7
+    BorderColor #D97706
+}
+
+package "app" {
+    class AppContext <<singleton>> {
+        - libraryService: LibraryService
+        - csvExportService: CsvExportService
+        - notificationCenter: NotificationCenter
+        - userPreferences: UserPreferences
+        + get(): AppContext
+        + library(): LibraryService
+        + exporter(): CsvExportService
+        + notifications(): NotificationCenter
+        + preferences(): UserPreferences
+        + notify(type, title, message): void
+    }
+
+    class MainApp {
+        + start(stage): void
+        + showSplash(): void
+        + showMain(): void
+    }
+}
+
+package "controller" {
+    class MainController <<controller>> {
+        + openDashboard(): void
+        + openBooks(): void
+        + openLoans(): void
+        + openStatistics(): void
+        + openSettings(): void
+        + showToast(type, title, message): void
+    }
+
+    class BooksController <<controller>> {
+        - books: ObservableList<Book>
+        + onSaveBook(): void
+        + onDeleteBook(): void
+        + onExportBooks(): void
+        + refreshBooks(): void
+    }
+
+    class LoansController <<controller>> {
+        - loans: ObservableList<Loan>
+        - books: ObservableList<Book>
+        + onCreateLoan(): void
+        + onUpdateLoan(): void
+        + onReturnLoan(): void
+        + onDeleteLoan(): void
+        + onExportLoans(): void
+        + refreshLoans(): void
+    }
+
+    class DashboardController <<controller>> {
+        + refreshDashboard(): void
+    }
+
+    class StatisticsController <<controller>> {
+        + refreshStatistics(): void
+    }
+
+    class SettingsController <<controller>> {
+        + savePreferences(): void
+        + resetPreferences(): void
+        + testConnection(): void
+    }
+}
+
+package "service" {
+    class LibraryService <<service>> {
+        - bookDao: BookDao
+        - loanDao: LoanDao
+        - dashboardDao: DashboardDao
+        + searchBooks(query, category, availableOnly): List<Book>
+        + saveBook(book): Book
+        + updateBook(book): void
+        + deleteBook(id): void
+        + searchLoans(query, status): List<Loan>
+        + createLoan(loan): Loan
+        + updateLoan(originalLoan, editedLoan): void
+        + returnLoan(loan): void
+        + deleteLoan(loan): void
+        + getMetrics(): DashboardMetrics
+        + refreshLateLoans(): void
+    }
+
+    class CsvExportService <<service>> {
+        + exportBooks(file, books): void
+        + exportLoans(file, loans): void
+    }
+
+    class NotificationCenter <<service>> {
+        - notifications: ObservableList<NotificationItem>
+        + notifications(): ObservableList<NotificationItem>
+        + add(type, title, message): NotificationItem
+        + clear(): void
+    }
+}
+
+package "model" {
+    class Book <<entity>> {
+        - id: int
+        - title: String
+        - author: String
+        - isbn: String
+        - category: String
+        - publisher: String
+        - publicationYear: int
+        - quantity: int
+        - available: boolean
+        - borrowCount: int
+        + getStatusLabel(): String
+    }
+
+    class Loan <<entity>> {
+        - id: int
+        - bookId: int
+        - bookTitle: String
+        - borrowerName: String
+        - borrowerEmail: String
+        - borrowerPhone: String
+        - loanDate: LocalDate
+        - dueDate: LocalDate
+        - returnDate: LocalDate
+        - status: LoanStatus
+        + getStatusLabel(): String
+    }
+
+    enum LoanStatus {
+        ACTIVE
+        RETURNED
+        LATE
+        + getDatabaseValue(): String
+        + getLabel(): String
+        + fromDatabase(value): LoanStatus
+    }
+
+    class DashboardMetrics <<record>> {
+        + totalBooks: int
+        + availableBooks: int
+        + unavailableBooks: int
+        + activeLoans: int
+        + lateLoans: int
+        + totalCopies: int
+        + borrowedCopies: int
+        + availabilityRate(): double
+    }
+
+    class NotificationItem {
+        - type: NotificationType
+        - title: String
+        - message: String
+        - createdAt: LocalDateTime
+        + getDisplayTime(): String
+    }
+
+    enum NotificationType {
+        SUCCESS
+        ERROR
+        WARNING
+        INFO
+        + getLabel(): String
+    }
+}
+
+package "dao" {
+    interface "CrudDao<T>" as CrudDao {
+        + findAll(): List<T>
+        + findById(id): Optional<T>
+        + save(entity): T
+        + update(entity): void
+        + delete(id): void
+    }
+
+    interface BookDao {
+        + search(query, category, availableOnly): List<Book>
+        + findAvailable(): List<Book>
+        + findCategories(): List<String>
+        + decrementQuantity(connection, bookId): void
+        + incrementQuantity(connection, bookId): void
+    }
+
+    interface LoanDao {
+        + search(query, status): List<Loan>
+        + save(connection, loan): Loan
+        + update(connection, loan): void
+        + delete(connection, loanId): void
+        + markReturned(connection, loanId): void
+        + refreshLateLoans(): void
+    }
+
+    interface DashboardDao {
+        + metrics(): DashboardMetrics
+        + booksByCategory(): Map<String, Integer>
+        + loansByStatus(): Map<String, Integer>
+        + monthlyLoans(): Map<String, Integer>
+        + popularBooks(limit): List<String>
+    }
+}
+
+package "dao.jdbc" {
+    class JdbcBookDao
+    class JdbcLoanDao
+    class JdbcDashboardDao
+}
+
+package "config" {
+    class Database {
+        + getConnection(): Connection
+        + testConnection(): boolean
+        + config(): DatabaseConfig
+    }
+
+    class DatabaseConfig {
+        - url: String
+        - user: String
+        - password: String
+        + load(): DatabaseConfig
+    }
+
+    class UserPreferences {
+        + apply(scene): void
+        + reset(): void
+    }
+}
+
+MainApp ..> AppContext
+MainController ..> AppContext
+BooksController ..> AppContext
+LoansController ..> AppContext
+DashboardController ..> AppContext
+StatisticsController ..> AppContext
+SettingsController ..> AppContext
+
+AppContext --> LibraryService
+AppContext --> CsvExportService
+AppContext --> NotificationCenter
+AppContext --> UserPreferences
+
+LibraryService --> BookDao
+LibraryService --> LoanDao
+LibraryService --> DashboardDao
+
+CrudDao <|-- BookDao
+CrudDao <|-- LoanDao
+
+BookDao <|.. JdbcBookDao
+LoanDao <|.. JdbcLoanDao
+DashboardDao <|.. JdbcDashboardDao
+
+JdbcBookDao ..> Database
+JdbcLoanDao ..> Database
+JdbcDashboardDao ..> Database
+Database --> DatabaseConfig
+
+BookDao ..> Book
+LoanDao ..> Loan
+DashboardDao ..> DashboardMetrics
+CsvExportService ..> Book
+CsvExportService ..> Loan
+NotificationCenter *-- "0..*" NotificationItem
+
+Book "1" <-- "0..*" Loan : livre_id
+Loan --> LoanStatus
+NotificationItem --> NotificationType
+SettingsController ..> UserPreferences
+SettingsController ..> Database
+
+@enduml
