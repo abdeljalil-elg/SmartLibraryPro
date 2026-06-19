@@ -82,6 +82,30 @@ src/main/resources/com/smartlibrary
 
 database/init_db.sql
 ```
+## Diagrammes UML
+
+Le dossier `diagrams/` contient les diagrammes UML réalisés durant la phase de conception de l'application SmartLibrary Pro.
+
+### Contenu du diagramms
+
+- `class_diagram.puml` : diagramme de classes représentant les principales entités du système, leurs attributs et les relations entre elles.
+- `use_case.puml` : diagramme de cas d'utilisation illustrant les interactions entre l'utilisateur et l'application.
+- `sequence_diagram.puml` : diagramme de séquence décrivant le déroulement des principales opérations, notamment les fonctionnalités CRUD et les interactions avec la base de données.
+
+Ces diagrammes ont été réalisés avec **PlantUML** et servent à documenter l'architecture et le fonctionnement de l'application avant son implémentation.
+
+#### Méthode de visualisation des diagrammes : Extension VS Code (Recommandée)
+
+1. Installer l'extension **PlantUML**.
+2. Ouvrir un fichier `.puml`.
+3. Appuyer sur :
+
+```text
+Alt + D
+```
+
+pour prévisualiser le diagramme.
+
 
 ## Notes 
 
